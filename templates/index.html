@@ -1,0 +1,25 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}Flasky{% endblock %}
+{% block navbar %}
+<div class="row">
+    <div class="col-sm-2 text-center bg-dark" style="height: 100vh;">
+        <nav class="navbar bg-dark navbar-dark flex-column">
+          <div class="navbar-brand text-center mx-auto my-4" role="tablist">Telesignos</div>     
+            
+                <a class="nav-item nav-link border-bottom py-4 w-100 "  href="/home" style="color:white">Home</a>
+                
+                  <a class="nav-item nav-link border-bottom w-100 py-4" href="/tablas" style="color:white">Tablas</a>
+                  
+                <a class="nav-item nav-link py-4 w-100 " href="/help" style="color:white">Ayuda</a>
+                 
+        </nav>
+    </div>
+
+
+{% endblock %}
+{% block content %}
+    <div class="col-sm-10">
+        {% block page_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

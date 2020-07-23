@@ -1,0 +1,33 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}Flasky{% endblock %}
+
+{% block body %}
+
+<div class="row" style="height: 100vh">
+    <div class="col-sm-6 bg-dark border-top">
+        <div class="container text-center my-auto">
+            <img class="my-4 py-4 rounded-lg w-100" src="https://img.freepik.com/free-vector/doctor-character-background_1270-84.jpg?size=338&ext=jpg">
+        </div>
+    </div>
+    <div class="col-sm-6 bg-dark border-top">
+        <div class="container">
+            <h1 class="display-4 text-center text-light my-4 py-4">TeleSignos</h1>
+            <form action="#" method="POST" class="text-center">
+                <div class="form-group text-left w-75 mx-auto">
+                    <label class="text-light" for="username">Usuario:</label>
+                    <input type="text" class="form-control" placeholder="Usuario" id="username" name="user">      
+                </div>
+                <div class="form-group text-left w-75 mx-auto">
+                    <label class="text-light" for="password">Password:</label>
+                    <input type="password" class="form-control" id="password" placeholder="password" name="password">
+                </div>
+                <!-- Liga para prototipo -->
+                <a href="/home" class="btn btn-lg btn-primary my-4">Login</a>
+                <!-- <button type="submit" class="btn btn-lg btn-primary my-4">Login</button> -->
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

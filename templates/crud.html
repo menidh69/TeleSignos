@@ -1,0 +1,16 @@
+{% extends "/index.html" %}
+
+{% block page_content %}
+<div class="container m-4">
+    <h1 class="m-4 display-4"> {{tabla|capitalize}} </h1>
+   
+    <div class="d-flex flex-row-reverse bd-highlight">
+        <button class="btn btn-sm btn-success m-2">Nuevo registro</button>
+        <button class="btn btn-sm btn-danger m-2">Eliminar</button>
+    </div>
+    <div class="row border shadow m-2" style="height:60vh">
+        <div class="col"></div>
+    </div>
+
+</div>
+{% endblock %}
