@@ -1,14 +1,13 @@
+import os
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
-from flask_sqlalchemy import SQLAlchemy
+
+
 
 app = Flask(__name__)
 Bootstrap(app)
-# basedir = os.path.abspath(os.path.dirname(__file__))
-# app.config['SQLALCHEMY_DATABASE_URI'] =\
-#     'postgresql://manueld:' + os.path.join(basedir, 'data.sqlite')
-# app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
-# db = SQLAlchemy(app)
+app.config.from_object(os.environ['APP_SETTINGS'])
+
 
 @app.route('/')
 def index():
