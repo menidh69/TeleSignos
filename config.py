@@ -7,22 +7,30 @@ class Config(object):
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = 'hola_como_estas'
-    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
-
+    SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+    
+    @staticmethod
+    def init_app(app):
+        pass
 
 class ProductionConfig(Config):
     DEBUG = False
-
-
-class StagingConfig(Config):
-    DEVELOPMENT = True
-    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
 
 
 class DevelopmentConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
-
+    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']    
 
 class TestingConfig(Config):
     TESTING = True
+    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+
+config = {
+    'development': DevelopmentConfig,
+    'testing': TestingConfig,
+    'production': ProductionConfig,
+
+    'default': DevelopmentConfig
+}

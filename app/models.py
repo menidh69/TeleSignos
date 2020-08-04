@@ -1,5 +1,6 @@
 from app import db
 from sqlalchemy.dialects.postgresql import JSON
+from werkzeug.security import generate_password_hash, check_password_hash
 import enum
 
 class UrgenciaEnum(enum.Enum):
@@ -136,7 +137,18 @@ class Usuario(db.Model):
     nombre_usuario = db.Column(db.String(70))
     id_tipo_usuario = db.Column(db.Integer, db.ForeignKey('public.tipo_usuario.id_tipo_usuario'), nullable=False)
     movimientos = db.relationship('Movimiento', backref='usuario', lazy=True)
+    password_hash = db.Column(db.String(128))
 
+    @property
+    def password(self):
+        raise AttributeError('password is not a readable attribute')
+    
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
     def __init__(self, nombre_usuario, id_tipo_usuario):
         self.nombre_usuario = nombre_usuario
@@ -144,6 +156,17 @@ class Usuario(db.Model):
 
     def __repr__(self):
         return '<id_usuario {}>'.format(self.id_usuario)
+    
+    @property
+    def password(self):
+        raise AttributeError('password is not a readable attribute')
+
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 class Paciente(db.Model):
     __tablename__ = 'pacientes'
