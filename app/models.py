@@ -9,6 +9,13 @@ import enum
 def load_user(user_id):
     return Usuario.query.get(int(user_id))
 
+class Permission: 
+    FOLLOW = 0x01
+    COMMENT = 0x02
+    WRITE_ARTICLES = 0x04
+    MODERATE_COMMENTS = 0x08
+    ADMINISTER = 0x80
+
 class UrgenciaEnum(enum.Enum):
     EMBARAZO='embarazo'
     ACCIDENTE='accidente'
@@ -117,23 +124,74 @@ class Ambulancia(db.Model):
     def __repr__(self):
         return '<id_ambulancia {}>'.format(self.id_ambulancia)
 
+# class Role(db.Model):
+#     __tablename__ = 'tipo_usuario'
+#     __table_args__ = {"schema": "public"}
+
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(64))
+#     default = db.Column(db.Boolean, default=False, index=True)
+#     permissions = db.Column(db.Integer)
+#     usuarios = db.relationship('Usuario', backref='role', lazy='dynamic')
+
+#     @staticmethod
+#     def insert_roles(): 
+#         roles = {
+#                 'User': (Permission.FOLLOW |
+#                         Permission.COMMENT |
+#                         Permission.WRITE_ARTICLES, True),
+#                 'Moderator': (Permission.FOLLOW |
+#                             Permission.COMMENT |
+#                             Permission.WRITE_ARTICLES |
+#                             Permission.MODERATE_COMMENTS, False),
+#                 'Administrator': (0xff, False)
+#             }
+#         for r in roles:
+#         role = Role.query.filter_by(name=r).first() 
+#             if role is None:
+#                 role = Role(name=r)
+#             role.permissions = roles[r][0]
+#             role.default = roles[r][1]
+#             db.session.add(role)
+#         db.session.commit()
+    
+#     def __repr__(self):
+#         return '<Role %r>' % self.name
+    
 class Tipo_Usuario(db.Model):
     __tablename__ = 'tipo_usuario'
     __table_args__ = {"schema": "public"}
 
     id_tipo_usuario = db.Column(db.Integer, primary_key=True, autoincrement=True)
     tipo_usuario = db.Column(db.Enum(tipoUsuario))
-    registro = db.Column(db.Boolean)
     medico_reg = db.Column(db.Boolean)
-    usuarios = db.relationship('Usuario', backref='tipo_usuario', lazy=True)
+    registro = db.Column(db.Boolean)
+    usuarios = db.relationship('Usuario', backref='role', lazy=True)
+    permissions = db.Column(db.Integer)
 
-    def __init__(self, tipo_usuario, registro, medico_reg):
+    def __init__(self, tipo_usuario):
         self.tipo_usuario = tipo_usuario
-        self.registro = registro
-        self.medico_reg = medico_reg
+
+    @staticmethod
+    def insert_roles():
+        roles = {
+            'MEDICO_REG': (Permission.WRITE_ARTICLES, True, False),
+            'REGISTRANTE': (Permission.WRITE_ARTICLES, False, True),
+            'PARAMEDICO': (Permission.WRITE_ARTICLES, False, False),
+            'ADMIN': (0xff, False, False)
+        }
+        for r in roles:
+            role = Tipo_Usuario.query.filter_by(tipo_usuario=r).first()
+            if role is None:
+                role = Tipo_Usuario(tipo_usuario=r)
+            role.permissions = roles[r][0]
+            role.medico_reg = roles[r][1]
+            role.registro = roles[r][2]
+            db.session.add(role)
+        db.session.commit()
 
     def __repr__(self):
-        return '<id_tipo_usuario {}>'.format(self.id_tipo_usuario)
+        return ('<id_tipo_usuario {}>'.format(self.id_tipo_usuario) + '<tipo_usuario {}>'.format(self.tipo_usuario))
 
 class Usuario(UserMixin, db.Model):
     __tablename__ = 'usuarios'
@@ -159,11 +217,24 @@ class Usuario(UserMixin, db.Model):
     def get_id(self):
         return (self.id_usuario)
 
-    def __init__(self, nombre_usuario):
-        self.nombre_usuario = nombre_usuario
+
+    def __init__(self, **kwargs): 
+        super(Usuario, self).__init__(**kwargs) 
+        if self.role is None:
+            if self.nombre_usuario == 'manuel' or 'cirett': 
+                self.role = Tipo_Usuario.query.filter_by(permissions=0xff).first()
+            if self.role is None:
+                self.role = Tipo_Usuario.query.filter_by(registro=True).first()
+
+    def can(self, permissions):
+        return self.role is not None and \
+            (self.role.permissions & permissions) == permissions 
+        
+    def is_administrator(self):
+        return self.can(Permission.ADMINISTER)
 
     def __repr__(self):
-        return '<id_usuario {}>'.format(self.id_usuario)
+        return '<nombre {}>'.format(self.nombre_usuario) + '<tipo: {}>'.format(self.role.tipo_usuario)
     
     @property
     def password(self):

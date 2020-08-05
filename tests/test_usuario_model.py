@@ -19,3 +19,9 @@ class UserModelTestCase(unittest.TestCase):
         u = User(password='cat')
         u2 = User(password='cat') 
         self.assertTrue(u.password_hash != u2.password_hash)
+    
+    def test_roles_and_permissions(self): 
+        Tipo_Usuario.insert_roles()
+        u = Usuario(nombre_usuario='juan', password='cat') 
+        self.assertTrue(u.can(Permission.WRITE_ARTICLES)) 
+
