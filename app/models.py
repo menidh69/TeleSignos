@@ -1,7 +1,13 @@
 from app import db
 from sqlalchemy.dialects.postgresql import JSON
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
+from . import login_manager
 import enum
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Usuario.query.get(int(user_id))
 
 class UrgenciaEnum(enum.Enum):
     EMBARAZO='embarazo'
@@ -129,12 +135,12 @@ class Tipo_Usuario(db.Model):
     def __repr__(self):
         return '<id_tipo_usuario {}>'.format(self.id_tipo_usuario)
 
-class Usuario(db.Model):
+class Usuario(UserMixin, db.Model):
     __tablename__ = 'usuarios'
     __table_args__ = {"schema": "public"}
 
     id_usuario = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    nombre_usuario = db.Column(db.String(70))
+    nombre_usuario = db.Column(db.String(70), unique=True, index=True)
     id_tipo_usuario = db.Column(db.Integer, db.ForeignKey('public.tipo_usuario.id_tipo_usuario'), nullable=False)
     movimientos = db.relationship('Movimiento', backref='usuario', lazy=True)
     password_hash = db.Column(db.String(128))
@@ -150,9 +156,11 @@ class Usuario(db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def __init__(self, nombre_usuario, id_tipo_usuario):
+    def get_id(self):
+        return (self.id_usuario)
+
+    def __init__(self, nombre_usuario):
         self.nombre_usuario = nombre_usuario
-        self.id_tipo_usuario
 
     def __repr__(self):
         return '<id_usuario {}>'.format(self.id_usuario)

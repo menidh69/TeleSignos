@@ -1,0 +1,22 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}Flasky{% endblock %}
+
+{% block body %}
+
+<div class="row" style="height: 100vh">
+    <div class="col-sm-6 bg-dark border-top">
+        <div class="container text-center my-auto">
+            <img class="my-4 py-4 rounded-lg w-100" src="https://img.freepik.com/free-vector/doctor-character-background_1270-84.jpg?size=338&ext=jpg">
+        </div>
+    </div>
+    <div class="col-sm-6 bg-dark border-top">
+        <div class="container text-center">
+            <h1 class="display-4 text-center text-light my-4 py-4">TeleSignos</h1>
+            {{wtf.quick_form(form)}}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -11,7 +11,7 @@ migrate = Migrate(app, db)
 # app.config.from_object(os.environ['APP_SETTINGS'])
 
 def make_shell_context():
-    return dict(app=app, db=db, Usuario=Usuario)
+    return dict(app=app, db=db, Usuario=Usuario, Tipo_Usuario=Tipo_Usuario)
 manager.add_command("shell", Shell(make_context=make_shell_context))
 manager.add_command('db', MigrateCommand)
 
