@@ -44,7 +44,8 @@ class Municipio(db.Model):
     hospitales = db.relationship('Hospital', backref='municipio', lazy=True)
 
 
-    def __init__(self, nombre_municipio):
+    def __init__(self, id_municipio, nombre_municipio):
+        self.id_municipio = id_municipio
         self.nombre_municipio = nombre_municipio
 
     def __repr__(self):
@@ -60,8 +61,10 @@ class Colonia(db.Model):
     pacientes = db.relationship('Paciente', backref='colonia', lazy=True)
 
 
-    def __init__(self, nombre_colonia):
+    def __init__(self, id_colonia, nombre_colonia, id_municipio):
+        self.id_colonia = id_colonia
         self.nombre_colonia= nombre_colonia
+        self.id_municipio = id_municipio
 
     def __repr__(self):
         return '<id_colonia {}>'.format(self.id_colonia)

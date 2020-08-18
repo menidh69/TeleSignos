@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 from flask import render_template, session, redirect, url_for, send_from_directory
 from . import main
-from .forms import NameForm 
+from .forms import NameForm, MunicipioForm, ColoniaForm 
 from .. import db
 from ..models import *
 from flask_login import login_required
@@ -39,6 +39,25 @@ def tablas():
 def show_tabla(tabla):
     return render_template('crud.html', tabla = tabla)
 
+@main.route('/tablas/municipios/new', methods=['GET', 'POST'])
+@login_required
+def new_municipio():
+    form = MunicipioForm()
+    if form.validate_on_submit():
+        municipio = Municipio(id_municipio=form.id_municipio.data, nombre_municipio=form.nombre_municipio.data)
+        db.session.add(municipio)
+        return redirect(url_for('.tablas.municipios.new'))
+    return render_template('new.html', form = form, tabla= 'municipio')
+
+@main.route('/tablas/colonias/new', methods=['GET', 'POST'])
+@login_required
+def new_colonia():
+    form = ColoniaForm()
+    if form.validate_on_submit():
+        colonia = Colonia(id_colonia=form.id_colonia.data, nombre_colonia=form.nombre_colonia.data, id_municipio=form.id_municipio.data)
+        db.session.add(colonia)
+        return redirect('/tablas/colonias/new')
+    return render_template('new.html', form = form, tabla= 'colonias')
 
 @main.route('/help')
 @login_required

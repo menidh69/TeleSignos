@@ -1,0 +1,10 @@
+{% extends "/index.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block page_content %}
+<div class="container w-75 my-5">
+<h1>{{tabla}} - Nuevo registro</h1>
+<div>
+{{wtf.quick_form(form)}}
+</div>
+</div>
+{% endblock %}
