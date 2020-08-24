@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import StringField, SubmitField, IntegerField, DateField, SelectField, DateTimeField
+from wtforms import StringField, SubmitField, PasswordField, IntegerField, DateField, SelectField, DateTimeField
 from wtforms.validators import Required
 
 
@@ -57,7 +57,7 @@ class TipoUrgenciaForm(Form):
     descripcion = StringField("Descripcion:", validators=[Required()])
     submit = SubmitField('Submit')
 
-class PacienteForm(Form):
+class MovimientoForm(Form):
     id_movimiento = IntegerField("id", validators=[Required()])
     id_paciente = IntegerField("id_paciente", validators=[Required()])
     id_usuario = IntegerField("id_usuario", validators=[Required()])
@@ -71,6 +71,12 @@ class PacienteForm(Form):
     frec_respiratoria = StringField('Frecuencia Respiratoria', validators=[Required()])
     temperatura = StringField('Temperatura', validators=[Required()])
     escala_glassglow = StringField('Escala Glassgow', validators=[Required()])
-    gravedad = SelectField("Gravedad" choices=[('BAJA'),('MEDIA'),('ALTA'),('MUY ALTA')])
+    gravedad = SelectField("Gravedad", choices=[('BAJA'),('MEDIA'),('ALTA'),('MUY ALTA')])
     submit = SubmitField('Submit')
     
+class UsuarioForm(Form):
+    id_usuario = IntegerField("id", validators=[Required()])
+    id_tipo_usuario = SelectField("Tipo usuario:", choices=[('1'),('2'),('3'),('4')], validators=[Required()])
+    nombre_usuario = StringField("Username:", validators=[Required()])
+    password_hash = PasswordField("Password:", validators=[Required()])
+    submit = SubmitField('Submit')
