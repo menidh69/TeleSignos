@@ -1,13 +1,18 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, Blueprint
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 from config import config
 from flask_login import LoginManager
+from flask_marshmallow import Marshmallow
+from flask_restful import Api
 
 bootstrap = Bootstrap()
 moment = Moment()
 db = SQLAlchemy()
+ma = Marshmallow()
+api_bp = Blueprint('api_bp', __name__)
+api = Api(api_bp)
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -22,6 +27,7 @@ def create_app(config_name):
     bootstrap.init_app(app)
     moment.init_app(app)
     db.init_app(app)
+    ma.init_app(app)
     login_manager.init_app(app)
 
     from .main import main as main_blueprint 
@@ -29,5 +35,9 @@ def create_app(config_name):
 
     from .auth import auth as auth_blueprint 
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
+
+    from .api import api as api_blueprint
+    app.register_blueprint(api_blueprint)
+    app.register_blueprint(api_bp, prefix="/api")
 
     return app

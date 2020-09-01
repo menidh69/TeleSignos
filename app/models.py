@@ -6,8 +6,8 @@ from . import login_manager
 import enum
 
 @login_manager.user_loader
-def load_user(user_id):
-    return Usuario.query.get(int(user_id))
+def load_user(id_usuario):
+    return Usuario.query.get(int(id_usuario))
 
 class Permission: 
     FOLLOW = 0x01
@@ -67,7 +67,7 @@ class Colonia(db.Model):
         self.id_municipio = id_municipio
 
     def __repr__(self):
-        return '<id_colonia {}>'.format(self.id_colonia)
+        return '<id_colonia {}>'.format(self.id_colonia) +  '<nombre: {}>'.format(self.nombre_colonia) +  '<idmunicipio: {}>'.format(self.municipio.nombre_municipio)
 
 class Hospital(db.Model):
     __tablename__ = 'hospitales'
@@ -81,7 +81,8 @@ class Hospital(db.Model):
     email = db.Column(db.String(70))
     movimientos = db.relationship('Movimiento', backref='hospital', lazy=True)
 
-    def __init__(self, nombre_hospital, direccion, telefono, email):
+    def __init__(self, id_municipio, nombre_hospital, direccion, telefono, email):
+        self.id_municipio = id_municipio
         self.nombre_hospital = nombre_hospital
         self.direccion = direccion
         self.telefono = telefono
@@ -94,7 +95,7 @@ class Servicio(db.Model):
     __tablename__ = 'servicios'
     __table_args__ = {"schema": "public"}
 
-    id_servicio = db.Column(db.Integer, primary_key=True)
+    id_servicio = db.Column(db.Integer, primary_key=True, autoincrement=True)
     servicio_nombre = db.Column(db.String(10))
     contacto = db.Column(db.String(70))
     telefono = db.Column(db.String(10))
@@ -120,9 +121,9 @@ class Ambulancia(db.Model):
     movimientos = db.relationship('Movimiento', backref='ambulancia', lazy=True)
 
 
-    def __init__(self, num_unidad):
+    def __init__(self, num_unidad, id_servicio):
         self.num_unidad= num_unidad
-        
+        self.id_servicio = id_servicio
 
     def __repr__(self):
         return '<id_ambulancia {}>'.format(self.id_ambulancia)
@@ -279,7 +280,7 @@ class Tipo_Urgencia(db.Model):
     __table_args__ = {'schema': 'public'}
 
     id_tipo_urgencia = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    urgencia = db.Enum(UrgenciaEnum)
+    urgencia = db.Column(db.String(20))
     descripcion = db.Column(db.String(70))
     movimientos = db.relationship('Movimiento', backref='tipo_urgencia', lazy=True)
 
@@ -288,7 +289,8 @@ class Tipo_Urgencia(db.Model):
         self.descripcion = descripcion
 
     def __repr__(self):
-        return '<id_tipo_urgencia {}>'.format(self.id_tipo_urgencia)
+        return '<id_tipo_urgencia {}>'.format(self.id_tipo_urgencia) + '<urgencia {}>'.format(self.urgencia)
+
 
 
 class Movimiento(db.Model):
@@ -296,11 +298,11 @@ class Movimiento(db.Model):
     __table_args__ = {"schema": "public"}
 
     id_movimiento = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    id_paciente = db.Column(db.Integer, db.ForeignKey('public.pacientes.id_paciente'), nullable=False)
-    id_usuario = db.Column(db.Integer, db.ForeignKey('public.usuarios.id_usuario'), nullable=False)
-    id_hospital = db.Column(db.Integer, db.ForeignKey('public.hospitales.id_hospital'), nullable=False)
-    id_ambulancia = db.Column(db.Integer, db.ForeignKey('public.ambulancias.id_ambulancia'), nullable=False)
-    id_tipo_urgencia = db.Column(db.Integer, db.ForeignKey('public.tipo_urgencia.id_tipo_urgencia'), nullable=False)
+    id_paciente = db.Column(db.Integer, db.ForeignKey('public.pacientes.id_paciente'))
+    id_usuario = db.Column(db.Integer, db.ForeignKey('public.usuarios.id_usuario'))
+    id_hospital = db.Column(db.Integer, db.ForeignKey('public.hospitales.id_hospital'))
+    id_ambulancia = db.Column(db.Integer, db.ForeignKey('public.ambulancias.id_ambulancia'))
+    id_tipo_urgencia = db.Column(db.Integer, db.ForeignKey('public.tipo_urgencia.id_tipo_urgencia'))
     fecha_inicio = db.Column(db.DateTime)
     fecha_final = db.Column(db.DateTime)
     presion_arterial = db.Column(db.String(10))
@@ -312,24 +314,11 @@ class Movimiento(db.Model):
     registros = db.relationship('Bitacora', backref='movimientos', lazy=True)
     
 
-    def __init__(self, id_movimiento, id_paciente, id_usuario, id_hospital, 
-    id_ambulancia, id_colonia, id_urgencia, fecha_inicio, fecha_final, presion_arterial, frec_cardiaca, frec_respiratoria,
-    temperatura, escala_glassgow, gravedad):
-        self.id_movimiento = id_movimiento
-        self.id_paciente = id_paciente
+    def __init__(self, id_usuario, id_ambulancia, id_colonia, id_urgencia):
         self.id_usuario = id_usuario
-        self.id_hospital = id_hospital
         self.id_ambulancia = id_ambulancia
         self.id_colonia = id_colonia
         self.id_urgencia = id_urgencia
-        self.fecha_inicio = fecha_inicio
-        self.fecha_final = fecha_final
-        self.presion_arterial = presion_arterial
-        self.frec_cardiaca = frec_cardiaca
-        self.frec_respiratoria = frec_respiratoria
-        self.temperatura = temperatura
-        self.escala_glassgow = escala_glassgow
-        self.gravedad = gravedad
 
     def __repr__(self):
         return '<id_movimiento {}>'.format(self.id_movimiento)

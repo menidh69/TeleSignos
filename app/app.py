@@ -5,15 +5,14 @@ from flask_sqlalchemy import SQLAlchemy
 from models import *
 from flask.ext.wtf import Form
 from wtforms import StringField, SubmitField from wtforms.validators import Required
-
-
+from flask_marshmallow import Marshmallow
 
 app = Flask(__name__)
 Bootstrap(app)
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
+ma = Marshmallow(app)
 
 class NameForm(Form):
 name = StringField('What is your name?', validators=[Required()]) 

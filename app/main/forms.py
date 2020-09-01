@@ -13,14 +13,12 @@ class MunicipioForm(Form):
     submit = SubmitField('Submit')
 
 class ColoniaForm(Form):
-    id_colonia = IntegerField("id", validators=[Required()])
-    nombre_colonia = StringField("Colonia:", validators=[Required()])
-    id_municipio = IntegerField("id_municipio", validators=[Required()])
+    nombre_colonia = StringField("Nombre Colonia:", validators=[Required()])
+    id_municipio = SelectField("Municipio", choices=[], validators=[Required()])
     submit = SubmitField('Submit')
 
 class HospitalForm(Form):
-    id_hospital = IntegerField("id", validators=[Required()])
-    id_municipio = IntegerField("id_municipio", validators=[Required()])
+    id_municipio = SelectField("id_municipio", choices=[],validators=[Required()])
     nombre_hospital = StringField("Hospital:", validators=[Required()])
     direccion = StringField("Direccion:", validators=[Required()])
     telefono = StringField("telefono:", validators=[Required()])
@@ -28,7 +26,6 @@ class HospitalForm(Form):
     submit = SubmitField('Submit')
 
 class ServicioForm(Form):
-    id_servicio = IntegerField("id", validators=[Required()])
     servicio_nombre = StringField("Servicio:", validators=[Required()])
     contacto = StringField("Direccion:", validators=[Required()])
     telefono = StringField("telefono:", validators=[Required()])
@@ -36,34 +33,30 @@ class ServicioForm(Form):
     submit = SubmitField('Submit')
 
 class AmbulanciaForm(Form):
-    id_ambulancia = IntegerField("id", validators=[Required()])
     num_unidad = StringField("Numero de unidad:", validators=[Required()])
-    id_servicio = IntegerField("id_servicio", validators=[Required()])
+    id_servicio = SelectField("id_servicio", choices=[], validators=[Required()])
     submit = SubmitField('Submit')
 
 class PacienteForm(Form):
-    id_paciente = IntegerField("id", validators=[Required()])
     servicio_medico = StringField("servicio medico:", validators=[Required()])
     nombre_paciente = StringField("Nombre:", validators=[Required()])
     apellidos = StringField("Apellidos:", validators=[Required()])
     genero = StringField("Genero:", validators=[Required()])
     fecha_nac = DateField("Fecha de Nacimiento", validators=[Required()])
-    id_colonia = IntegerField("id_colonia", validators=[Required()])
+    id_colonia = SelectField("id_colonia", choices=[], validators=[Required()])
     submit = SubmitField('Submit')
 
 class TipoUrgenciaForm(Form):
-    id_tipo_urgencia = IntegerField("id", validators=[Required()])
-    urgencia = SelectField("Urgencia:", choices=[('EMBARAZO'),('ACCIDENTE'),('RESPIRATORIO'),('OTRO')], validators=[Required()])
+    urgencia = StringField("Urgencia:", validators=[Required()])
     descripcion = StringField("Descripcion:", validators=[Required()])
     submit = SubmitField('Submit')
 
 class MovimientoForm(Form):
-    id_movimiento = IntegerField("id", validators=[Required()])
-    id_paciente = IntegerField("id_paciente", validators=[Required()])
+    id_paciente = SelectField("id_paciente", choices=[], validators=[Required()])
     id_usuario = IntegerField("id_usuario", validators=[Required()])
-    id_hospital = IntegerField("id_hospital", validators=[Required()])
-    id_ambulancia = IntegerField("id_ambulancia", validators=[Required()])
-    id_tipo_urgencia = IntegerField("id_tipo_urgencia", validators=[Required()])
+    id_hospital = SelectField("id_hospital", choices=[], validators=[Required()])
+    id_ambulancia = SelectField("id_ambulancia", choices=[], validators=[Required()])
+    id_tipo_urgencia = SelectField("id_tipo_urgencia", choices=[], validators=[Required()])
     fecha_inicio = DateTimeField('Fecha y Hora Inicial', validators=[Required()])
     fecha_final = DateTimeField('Fecha y Hora Final', validators=[Required()])
     presion_arterial = StringField('Presion Arterial', validators=[Required()])
@@ -75,8 +68,7 @@ class MovimientoForm(Form):
     submit = SubmitField('Submit')
     
 class UsuarioForm(Form):
-    id_usuario = IntegerField("id", validators=[Required()])
-    id_tipo_usuario = SelectField("Tipo usuario:", choices=[('1'),('2'),('3'),('4')], validators=[Required()])
+    id_tipo_usuario = SelectField("Tipo usuario:", choices=[], validators=[Required()])
     nombre_usuario = StringField("Username:", validators=[Required()])
     password_hash = PasswordField("Password:", validators=[Required()])
     submit = SubmitField('Submit')
