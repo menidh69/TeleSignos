@@ -21,7 +21,14 @@ class ProductionConfig(Config):
 class DevelopmentConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']    
+    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']  
+    # OAUTH_CREDENTIALS={
+    #     'google':{
+    #         'id': os.environ['GOOGLE_LOGIN_CLIENT_ID'],
+    #         'secret': os.environ['GOOGLE_LOGIN_CLIENT_SECRET']
+    #     }
+    # }  
+    
 
 class TestingConfig(Config):
     TESTING = True

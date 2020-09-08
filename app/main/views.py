@@ -4,9 +4,9 @@ from flask import render_template, session, redirect, url_for, send_from_directo
 from . import main
 from .forms import NameForm, MunicipioForm, UsuarioForm, ColoniaForm, HospitalForm, ServicioForm, AmbulanciaForm, PacienteForm, TipoUrgenciaForm, MovimientoForm 
 from .. import db
-from ..models import *
+from ..models import * 
 from flask_login import login_required, current_user
-
+from .. import models as models
 
 @main.route('/favicon.ico')
 def favicon():
@@ -25,10 +25,16 @@ def tablas():
     return render_template('tablas.html')
 
 
-@main.route('/tablas/<tabla>')
+@main.route('/tablas/<table>')
 @login_required
-def show_tabla(tabla):
-    return render_template('crud.html', tabla = tabla)
+def show_table(table):
+    TableDict = {"municipios":"Municipio", "colonias":"Colonia", "hospitales":"Hospital", "ambulancias":"Ambulancia",
+    "tipo_urgencias":"Tipo_Urgencia", "movimientos":"Movimiento", "pacientes":"Paciente", "servicios": "Servicio", "usuarios":"Usuario", "bitacora":"Bitacora"}
+    table = TableDict[table]
+    tableclass = getattr(models, table)
+    columns = tableclass.__table__.columns.keys()
+    items = tableclass.query.all()
+    return render_template('crud.html', tablename = table, items = items, columns = columns)
 
 
 # GET & POST NEW REGISTRO

@@ -2,14 +2,34 @@
 
 {% block page_content %}
 <div class="container m-4">
-    <h1 class="m-4 display-4"> {{tabla|capitalize}} </h1>
+    <h1 class="m-4 display-4"> {{tablename|capitalize}} </h1>
    
     <div class="d-flex flex-row-reverse bd-highlight">
         <a class="btn btn-sm btn-success m-2" href="{{tabla}}/new">Nuevo registro</a>
         <a class="btn btn-sm btn-danger m-2">Eliminar</a>
     </div>
-    <div class="row border shadow m-2" style="height:60vh">
-        <div class="col"></div>
+    <div style="position: relative; height: 600px; overflow: auto; display: block;">
+        <table class="m-2 table table-bordered table-striped">
+            <thead>
+                {% for column in columns %}
+                <th>{{column}}</th>
+                {%endfor%}
+                <th>Editar</th>
+                <th>Borrar</th>
+            </thead>
+            <tbody>
+            {% for item in items %}
+            <tr>
+                {% for column in columns %}
+                <td>{{item[column]}}</td>
+                {%endfor%}
+                <td><button class="btn btn-sm btn-warning">Editar</button></td>
+                <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
+
+            </tr>
+            {%endfor%}
+            </tbody>
+        </table>
     </div>
 
 </div>
