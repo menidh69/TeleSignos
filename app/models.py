@@ -44,9 +44,9 @@ class Municipio(db.Model):
     hospitales = db.relationship('Hospital', backref='municipio', lazy=True)
 
 
-    def __init__(self, id_municipio, nombre_municipio):
-        self.id_municipio = id_municipio
-        self.nombre_municipio = nombre_municipio
+    # def __init__(self, id_municipio, nombre_municipio):
+    #     self.id_municipio = id_municipio
+    #     self.nombre_municipio = nombre_municipio
 
     def __repr__(self):
         return '<id_municipio {}>'.format(self.id_municipio)
@@ -61,10 +61,10 @@ class Colonia(db.Model):
     pacientes = db.relationship('Paciente', backref='colonia', lazy=True)
 
 
-    def __init__(self, id_colonia, nombre_colonia, id_municipio):
-        self.id_colonia = id_colonia
-        self.nombre_colonia= nombre_colonia
-        self.id_municipio = id_municipio
+    # def __init__(self, id_colonia, nombre_colonia, id_municipio):
+    #     self.id_colonia = id_colonia
+    #     self.nombre_colonia= nombre_colonia
+    #     self.id_municipio = id_municipio
 
     def __repr__(self):
         return '<id_colonia {}>'.format(self.id_colonia) +  '<nombre: {}>'.format(self.nombre_colonia) +  '<idmunicipio: {}>'.format(self.municipio.nombre_municipio)
@@ -81,12 +81,12 @@ class Hospital(db.Model):
     email = db.Column(db.String(70))
     movimientos = db.relationship('Movimiento', backref='hospital', lazy=True)
 
-    def __init__(self, id_municipio, nombre_hospital, direccion, telefono, email):
-        self.id_municipio = id_municipio
-        self.nombre_hospital = nombre_hospital
-        self.direccion = direccion
-        self.telefono = telefono
-        self.email = email
+    # def __init__(self, id_municipio, nombre_hospital, direccion, telefono, email):
+    #     self.id_municipio = id_municipio
+    #     self.nombre_hospital = nombre_hospital
+    #     self.direccion = direccion
+    #     self.telefono = telefono
+    #     self.email = email
 
     def __repr__(self):
         return '<id_hospital {}>'.format(self.id_hospital)
@@ -102,11 +102,11 @@ class Servicio(db.Model):
     email = db.Column(db.String(70))
     ambulancias = db.relationship('Ambulancia', backref='servicio', lazy=True)
 
-    def __init__(self, servicio_nombre, contacto, telefono, email):
-        self.servicio_nombre = servicio_nombre
-        self.contacto = contacto
-        self.telefono = telefono
-        self.email = email
+    # def __init__(self, servicio_nombre, contacto, telefono, email):
+    #     self.servicio_nombre = servicio_nombre
+    #     self.contacto = contacto
+    #     self.telefono = telefono
+    #     self.email = email
 
     def __repr__(self):
         return '<id {}>'.format(self.id_servicio)
@@ -121,9 +121,9 @@ class Ambulancia(db.Model):
     movimientos = db.relationship('Movimiento', backref='ambulancia', lazy=True)
 
 
-    def __init__(self, num_unidad, id_servicio):
-        self.num_unidad= num_unidad
-        self.id_servicio = id_servicio
+    # def __init__(self, num_unidad, id_servicio):
+    #     self.num_unidad= num_unidad
+    #     self.id_servicio = id_servicio
 
     def __repr__(self):
         return '<id_ambulancia {}>'.format(self.id_ambulancia)
@@ -264,13 +264,13 @@ class Paciente(db.Model):
     id_colonia = db.Column(db.Integer, db.ForeignKey('public.colonias.id_colonia'), nullable=False)
     movimientos = db.relationship('Movimiento', backref='paciente', lazy=True)
   
-    def __init__(self, servicio_medico, nombre_paciente, apellidos, genero, fecha_nac, id_colonia):
-        self.servicio_medico = servicio_medico
-        self.nombre_paciente = nombre_paciente
-        self.apellidos = apellidos
-        self.genero = genero
-        self.fecha_nac = fecha_nac
-        self.id_colonia = id_colonia
+    # def __init__(self, servicio_medico, nombre_paciente, apellidos, genero, fecha_nac, id_colonia):
+    #     self.servicio_medico = servicio_medico
+    #     self.nombre_paciente = nombre_paciente
+    #     self.apellidos = apellidos
+    #     self.genero = genero
+    #     self.fecha_nac = fecha_nac
+    #     self.id_colonia = id_colonia
 
     def __repr__(self):
         return '<id_paciente {}>'.format(self.id_paciente)
@@ -284,9 +284,9 @@ class Tipo_Urgencia(db.Model):
     descripcion = db.Column(db.String(70))
     movimientos = db.relationship('Movimiento', backref='tipo_urgencia', lazy=True)
 
-    def __init__(self, urgencia, descripcion):
-        self.urgencia = urgencia
-        self.descripcion = descripcion
+    # def __init__(self, urgencia, descripcion):
+    #     self.urgencia = urgencia
+    #     self.descripcion = descripcion
 
     def __repr__(self):
         return '<id_tipo_urgencia {}>'.format(self.id_tipo_urgencia) + '<urgencia {}>'.format(self.urgencia)
@@ -314,21 +314,21 @@ class Movimiento(db.Model):
     registros = db.relationship('Bitacora', backref='movimientos', lazy=True)
     
 
-    def __init__(self, id_paciente, id_usuario, id_ambulancia, id_hospital, id_tipo_urgencia, fecha_inicio,
-    fecha_final, presion_arterial, frec_cardiaca, frec_respiratoria, temperatura, escala_glassgow, gravedad):
-        self.id_paciente = id_paciente
-        self.id_usuario = id_usuario
-        self.id_ambulancia = id_ambulancia
-        self.id_hospital = id_hospital
-        self.id_tipo_urgencia = id_tipo_urgencia
-        self.fecha_inicio = fecha_inicio
-        self.fecha_final = fecha_final
-        self.presion_arterial = presion_arterial
-        self.frec_cardiaca = frec_cardiaca
-        self.frec_respiratoria = frec_respiratoria
-        self.temperatura = temperatura
-        self.escala_glassgow = escala_glassgow
-        self.gravedad = gravedad
+    # def __init__(self, id_paciente, id_usuario, id_ambulancia, id_hospital, id_tipo_urgencia, fecha_inicio,
+    # fecha_final, presion_arterial, frec_cardiaca, frec_respiratoria, temperatura, escala_glassgow, gravedad):
+    #     self.id_paciente = id_paciente
+    #     self.id_usuario = id_usuario
+    #     self.id_ambulancia = id_ambulancia
+    #     self.id_hospital = id_hospital
+    #     self.id_tipo_urgencia = id_tipo_urgencia
+    #     self.fecha_inicio = fecha_inicio
+    #     self.fecha_final = fecha_final
+    #     self.presion_arterial = presion_arterial
+    #     self.frec_cardiaca = frec_cardiaca
+    #     self.frec_respiratoria = frec_respiratoria
+    #     self.temperatura = temperatura
+    #     self.escala_glassgow = escala_glassgow
+    #     self.gravedad = gravedad
         
 
     def __repr__(self):

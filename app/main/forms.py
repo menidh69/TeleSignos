@@ -1,6 +1,7 @@
 from flask_wtf import Form
-from wtforms import StringField, SubmitField, PasswordField, IntegerField, DateField, SelectField, DateTimeField
-from wtforms.validators import Required
+from wtforms import StringField, SubmitField, PasswordField, IntegerField, SelectField, DateTimeField
+from wtforms.fields.html5 import DateTimeLocalField, DateField
+from wtforms.validators import Required, Optional
 
 
 class NameForm(Form):
@@ -53,19 +54,19 @@ class TipoUrgenciaForm(Form):
     submit = SubmitField('Submit')
 
 class MovimientoForm(Form):
-    id_paciente = SelectField("id_paciente", choices=[], validators=[Required()])
-    id_usuario = IntegerField("id_usuario", validators=[Required()])
-    id_hospital = SelectField("id_hospital", choices=[], validators=[Required()])
-    id_ambulancia = SelectField("id_ambulancia", choices=[], validators=[Required()])
-    id_tipo_urgencia = SelectField("id_tipo_urgencia", choices=[], validators=[Required()])
-    fecha_inicio = DateField('Fecha y Hora Inicial', validators=[Required()])
-    fecha_final = DateField('Fecha y Hora Final', validators=[Required()])
-    presion_arterial = StringField('Presion Arterial', validators=[Required()])
-    frec_cardiaca = StringField('Frecuencia Cardiaca', validators=[Required()])    
-    frec_respiratoria = StringField('Frecuencia Respiratoria', validators=[Required()])
-    temperatura = StringField('Temperatura', validators=[Required()])
-    escala_glassglow = StringField('Escala Glassgow', validators=[Required()])
-    gravedad = SelectField("Gravedad", choices=[('BAJA'),('MEDIA'),('ALTA'),('MUY ALTA')])
+    id_paciente = SelectField("id_paciente", choices=[], validators=[Optional()])
+    id_usuario = IntegerField("id_usuario", validators=[Optional()])
+    id_hospital = SelectField("id_hospital", choices=[], validators=[Optional()])
+    id_ambulancia = SelectField("id_ambulancia", choices=[], validators=[Optional()])
+    id_tipo_urgencia = SelectField("id_tipo_urgencia", validators=[Optional()])
+    fecha_inicio = DateTimeLocalField('Fecha y Hora Inicial', format='%Y-%m-%d', validators=[Optional()])
+    fecha_final = DateTimeLocalField('Fecha y Hora Final', format='%Y-%m-%d', validators=[Optional()])
+    presion_arterial = StringField('Presion Arterial', validators=[Optional()])
+    frec_cardiaca = StringField('Frecuencia Cardiaca', validators=[Optional()])    
+    frec_respiratoria = StringField('Frecuencia Respiratoria', validators=[Optional()])
+    temperatura = StringField('Temperatura', validators=[Optional()])
+    escala_glassglow = StringField('Escala Glassgow', validators=[Optional()])
+    gravedad = SelectField("Gravedad", choices=[('BAJA'),('MEDIA'),('ALTA'),('MUY ALTA')], validators=[Optional()])
     submit = SubmitField('Submit')
     
 class UsuarioForm(Form):

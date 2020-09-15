@@ -133,14 +133,26 @@ def new_movimiento():
     form.id_ambulancia.choices = [(ambulancia.id_ambulancia, ambulancia.num_unidad) for ambulancia in Ambulancia.query.all()]
     form.id_tipo_urgencia.choices = [(tipo.id_tipo_urgencia, tipo.urgencia) for tipo in Tipo_Urgencia.query.all()]
     form.id_usuario = current_user.id_usuario
+    if form.is_submitted():
+        print("submitted")
+    if form.validate():
+        print("validate")
+    print(form.errors)
     if form.validate_on_submit():
-        movimiento = Movimiento(
-        id_paciente=form.id_paciente.data, id_usuario=current_user.id_usuario, 
-        id_hospital=form.id_hospital.data, id_ambulancia=form.id_ambulancia.data, 
-        id_tipo_urgencia=form.id_tipo_urgencia.data, fecha_inicio=form.fecha_inicio.data,
-        fecha_final=form.fecha_final.data, presion_arterial=form.presion_arterial.data, 
-        frec_cardiaca=form.frec_cardiaca.data, frec_respiratoria=form.frec_respiratoria.data, 
-        temperatura=form.temperatura.data, escala_glassgow=form.escala_glassglow.data, gravedad=form.gravedad.data)
+        movimiento = Movimiento()
+        movimiento.id_paciente=form.id_paciente.data
+        movimiento.id_usuario=current_user.id_usuario, 
+        movimiento.id_hospital=form.id_hospital.data
+        movimiento.id_ambulancia=form.id_ambulancia.data, 
+        movimiento.id_tipo_urgencia=form.id_tipo_urgencia.data
+        movimiento.fecha_inicio=form.fecha_inicio.data,
+        movimiento.fecha_final=form.fecha_final.data
+        movimiento.presion_arterial=form.presion_arterial.data, 
+        movimiento.frec_cardiaca=form.frec_cardiaca.data
+        movimiento.frec_respiratoria=form.frec_respiratoria.data, 
+        movimiento.temperatura=form.temperatura.data
+        movimiento.escala_glassgow=form.escala_glassglow.data
+        movimiento.gravedad=form.gravedad.data
         db.session.add(movimiento)
         return redirect('/catalogo/movimientos')
     return render_template('new.html', form = form, tabla= 'movimientos')
