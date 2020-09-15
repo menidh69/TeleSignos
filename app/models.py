@@ -314,11 +314,22 @@ class Movimiento(db.Model):
     registros = db.relationship('Bitacora', backref='movimientos', lazy=True)
     
 
-    def __init__(self, id_usuario, id_ambulancia, id_colonia, id_urgencia):
+    def __init__(self, id_paciente, id_usuario, id_ambulancia, id_hospital, id_tipo_urgencia, fecha_inicio,
+    fecha_final, presion_arterial, frec_cardiaca, frec_respiratoria, temperatura, escala_glassgow, gravedad):
+        self.id_paciente = id_paciente
         self.id_usuario = id_usuario
         self.id_ambulancia = id_ambulancia
-        self.id_colonia = id_colonia
-        self.id_urgencia = id_urgencia
+        self.id_hospital = id_hospital
+        self.id_tipo_urgencia = id_tipo_urgencia
+        self.fecha_inicio = fecha_inicio
+        self.fecha_final = fecha_final
+        self.presion_arterial = presion_arterial
+        self.frec_cardiaca = frec_cardiaca
+        self.frec_respiratoria = frec_respiratoria
+        self.temperatura = temperatura
+        self.escala_glassgow = escala_glassgow
+        self.gravedad = gravedad
+        
 
     def __repr__(self):
         return '<id_movimiento {}>'.format(self.id_movimiento)

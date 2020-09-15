@@ -5,7 +5,7 @@
     <h1 class="m-4 display-4"> {{tablename|capitalize}} </h1>
    
     <div class="d-flex flex-row-reverse bd-highlight">
-        <a class="btn btn-sm btn-success m-2" href="{{tabla}}/new">Nuevo registro</a>
+        <a class="btn btn-sm btn-success m-2" href="{{table}}/new">Nuevo registro</a>
         <a class="btn btn-sm btn-danger m-2">Eliminar</a>
     </div>
     <div style="position: relative; height: 600px; overflow: auto; display: block;">
@@ -23,8 +23,8 @@
                 {% for column in columns %}
                 <td>{{item[column]}}</td>
                 {%endfor%}
-                <td><button class="btn btn-sm btn-warning">Editar</button></td>
-                <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
+                <td><a class="btn btn-sm btn-warning" href="{{table}}/edit/{{item[columns[0]]}}">Editar</a></td>
+                <td><a class="btn btn-sm btn-danger" href="{{table}}/delete/{{item[columns[0]]}}">Eliminar</a></td>
 
             </tr>
             {%endfor%}

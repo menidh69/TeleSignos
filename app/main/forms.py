@@ -13,6 +13,7 @@ class MunicipioForm(Form):
     submit = SubmitField('Submit')
 
 class ColoniaForm(Form):
+    id_colonia = IntegerField("id", validators=[Required()])
     nombre_colonia = StringField("Nombre Colonia:", validators=[Required()])
     id_municipio = SelectField("Municipio", choices=[], validators=[Required()])
     submit = SubmitField('Submit')
@@ -57,8 +58,8 @@ class MovimientoForm(Form):
     id_hospital = SelectField("id_hospital", choices=[], validators=[Required()])
     id_ambulancia = SelectField("id_ambulancia", choices=[], validators=[Required()])
     id_tipo_urgencia = SelectField("id_tipo_urgencia", choices=[], validators=[Required()])
-    fecha_inicio = DateTimeField('Fecha y Hora Inicial', validators=[Required()])
-    fecha_final = DateTimeField('Fecha y Hora Final', validators=[Required()])
+    fecha_inicio = DateField('Fecha y Hora Inicial', validators=[Required()])
+    fecha_final = DateField('Fecha y Hora Final', validators=[Required()])
     presion_arterial = StringField('Presion Arterial', validators=[Required()])
     frec_cardiaca = StringField('Frecuencia Cardiaca', validators=[Required()])    
     frec_respiratoria = StringField('Frecuencia Respiratoria', validators=[Required()])

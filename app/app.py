@@ -36,7 +36,7 @@ def home():
 def tablas():
     return render_template('tablas.html')
 
-@app.route('/tablas/<tabla>')
+@app.route('/catalogo/<tabla>')
 def show_tabla(tabla):
     return render_template('crud.html', tabla = tabla)
 
