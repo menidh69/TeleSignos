@@ -19,13 +19,17 @@
             </thead>
             <tbody>
             {% for item in items %}
+            
             <tr>
-                {% for column in columns %}
-                <td>{{item[column]}}</td>
+                {% for i in range(columns|length) %}
+                {% if i==0 %}
+                <td><a href="{{table}}/{{item[columns[i]]}}">{{item[columns[i]]}}</a></td>
+                {%else%}
+                <td>{{item[columns[i]]}}</td>
+                {%endif%}
                 {%endfor%}
                 <td><a class="btn btn-sm btn-warning" href="{{table}}/edit/{{item[columns[0]]}}">Editar</a></td>
                 <td><a class="btn btn-sm btn-danger" href="{{table}}/delete/{{item[columns[0]]}}">Eliminar</a></td>
-
             </tr>
             {%endfor%}
             </tbody>

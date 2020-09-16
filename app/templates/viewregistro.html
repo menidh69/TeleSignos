@@ -1,0 +1,18 @@
+{% extends "/index.html" %}
+{% block page_content %}
+<h1 class="m-4">Ver registro</h1>
+<a href="edit/{{registro[columns[0]]}}" class="btn rounded-pill btn-warning mx-4">Edit</a>
+<a href="delete/{{registro[columns[0]]}}" class="btn rounded-pill btn-danger mx-4">Delete</a>
+<div style="position: relative; height: 600px; overflow: auto; display: block;">
+    <table class="m-4 table table-bordered table-striped w-50">
+        <tbody>
+        {%for column in columns%}        
+        <tr>
+            <th>{{column}}</th>
+            <td>{{registro[column]}}</td>
+        </tr>
+        {%endfor%}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

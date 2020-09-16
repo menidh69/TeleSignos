@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from flask import render_template, session, redirect, url_for, send_from_directory
+from flask import render_template, session, redirect, url_for, send_from_directory, flash
 from . import main
 from .forms import NameForm, MunicipioForm, UsuarioForm, ColoniaForm, HospitalForm, ServicioForm, AmbulanciaForm, PacienteForm, TipoUrgenciaForm, MovimientoForm 
 from .. import db
@@ -36,7 +36,7 @@ def show_table(table):
     return render_template('crud.html', table=table, items = items, columns = columns)
 
 
-# GET & POST NEW REGISTRO
+################ GET & POST NEW REGISTRO #########################
 @main.route('/catalogo/municipios/new', methods=['GET', 'POST'])
 @login_required
 def new_municipio():
@@ -44,7 +44,8 @@ def new_municipio():
     if form.validate_on_submit():
         municipio = Municipio(id_municipio=form.id_municipio.data, nombre_municipio=form.nombre_municipio.data)
         db.session.add(municipio)
-        return redirect(url_for('.tablas.municipios.new'))
+        flash('El registro fue guardado exitosamente')
+        return redirect(url_for('main.show_table', table='municipios'))
     return render_template('new.html', form = form, tabla= 'municipio')
 
 @main.route('/catalogo/colonias/new', methods=['GET', 'POST'])
@@ -55,7 +56,8 @@ def new_colonia():
     if form.validate_on_submit():
         colonia = Colonia(id_colonia=form.id_colonia.data, nombre_colonia=form.nombre_colonia.data, id_municipio=form.id_municipio.data)
         db.session.add(colonia)
-        return redirect('/catalogo/colonias/new')
+        flash('El registro fue guardado exitosamente')
+        return redirect(url_for('main.show_table', table='colonias'))
     return render_template('new.html', form = form, tabla= 'colonias')
 
 @main.route('/catalogo/hospitales/new', methods=['GET', 'POST'])
@@ -66,7 +68,8 @@ def new_hospital():
     if form.validate_on_submit():
         hospital = Hospital(id_municipio=form.id_municipio.data, nombre_hospital=form.nombre_hospital.data, direccion=form.direccion.data, telefono=form.telefono.data, email=form.email.data)
         db.session.add(hospital)
-        return redirect('/catalogo/hospitales/new')
+        flash('El registro fue guardado exitosamente')
+        return redirect(url_for('main.show_table', table='hospitales'))
     return render_template('new.html', form = form, tabla= 'hospitales')
 
 
@@ -89,7 +92,8 @@ def new_ambulancia():
     if form.validate_on_submit():
         ambulancia = Ambulancia(num_unidad=form.num_unidad.data, id_servicio=form.id_servicio.data)
         db.session.add(ambulancia)
-        return redirect('/catalogo/ambulancias/new')
+        flash('El registro fue guardado exitosamente')
+        return redirect(url_for('main.show_table', table='ambulancias'))
     return render_template('new.html', form = form, tabla= 'ambulancias')
 
 @main.route('/catalogo/usuarios/new', methods=['GET', 'POST'])
@@ -100,7 +104,8 @@ def new_usuario():
     if form.validate_on_submit():
         usuario = Usuario(id_tipo_usuario=form.id_tipo_usuario.data, nombre_usuario=form.nombre_usuario.data, password_hash=form.password_hash.data)
         db.session.add(usuario)
-        return redirect('/catalogo/usuarios/new')
+        flash('El registro fue guardado exitosamente')
+        return redirect(url_for('main.show_table', table='usuarios'))
     return render_template('new.html', form = form, tabla= 'usuarios')
 
 @main.route('/catalogo/pacientes/new', methods=['GET', 'POST'])
@@ -111,7 +116,8 @@ def new_paciente():
     if form.validate_on_submit():
         paciente = Paciente(servicio_medico=form.servicio_medico.data, nombre_paciente=form.nombre_paciente.data, apellidos=form.apellidos.data, genero=form.genero.data, fecha_nac=form.fecha_nac.data, id_colonia=form.id_colonia.data)
         db.session.add(paciente)
-        return redirect('/catalogo/pacientes/new')
+        flash('El registro fue guardado exitosamente')
+        return redirect(url_for('main.show_table', table='pacientes'))
     return render_template('new.html', form = form, tabla= 'pacientes')
 
 @main.route('/catalogo/tipo_urgencia/new', methods=['GET', 'POST'])
@@ -121,7 +127,8 @@ def new_tipo_urgencia():
     if form.validate_on_submit():
         tipo = Tipo_Urgencia(urgencia=form.urgencia.data, descripcion=form.descripcion.data)
         db.session.add(tipo)
-        return redirect('/catalogo/tipo_urgencia/new')
+        flash('El registro fue guardado exitosamente')
+        return redirect(url_for('main.show_table', table='tipo_urgencia'))
     return render_template('new.html', form = form, tabla= 'tipo_urgencia')
 
 @main.route('/catalogo/movimientos/new', methods=['GET', 'POST'])
@@ -154,8 +161,25 @@ def new_movimiento():
         movimiento.escala_glassgow=form.escala_glassglow.data
         movimiento.gravedad=form.gravedad.data
         db.session.add(movimiento)
-        return redirect('/catalogo/movimientos')
+        flash('El registro fue guardado exitosamente')
+        return redirect(url_for('main.show_table', table='movimientos'))
     return render_template('new.html', form = form, tabla= 'movimientos')
+
+##################################################################
+
+#################### GET REGISTRO ##################
+@main.route('/catalogo/<table>/<int:id>', methods=['GET', 'POST'])
+@login_required
+def get_registro(table, id):
+    TableDict = {"municipios":"Municipio", "colonias":"Colonia", "hospitales":"Hospital", "ambulancias":"Ambulancia",
+    "tipo_urgencia":"Tipo_Urgencia", "movimientos":"Movimiento", "pacientes":"Paciente", "servicios": "Servicio", "usuarios":"Usuario", "bitacora":"Bitacora"}
+    tableclass = getattr(models, TableDict[table])
+    columns = tableclass.__table__.columns.keys()
+    registro = tableclass.query.get_or_404(id)
+    return render_template('viewregistro.html', table=table, registro= registro, columns = columns)
+#####################################################
+
+###################### GET PUT AND DELETE REGISTRO #######################
 
 @main.route('/catalogo/municipios/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -166,17 +190,19 @@ def edit_municipio(id):
         municipio.id_municipio = form.id_municipio.data
         municipio.nombre_municipio = form.nombre_municipio.data
         db.session.add(municipio)
-        return redirect('/catalogo/municipios')
+        flash('El registro fue actualizado exitosamente')
+        return redirect(url_for('main.get_registro', table='municipios', id=municipio.id_municipio))
     form.id_municipio.data = municipio.id_municipio
     form.nombre_municipio.data = municipio.nombre_municipio
     return render_template('edit.html', form=form)
 
-@main.route('/catalogo/municipios/delete/<int:id>', methods=['POST'])
+@main.route('/catalogo/municipios/delete/<int:id>', methods=['GET'])
 @login_required
 def del_municipio(id):
     municipio = Municipio.query.get_or_404(id)
     db.session.delete(municipio)
     db.session.commit()
+    flash('El registro fue eliminado exitosamente')
     return redirect("/catalogo/municipios")
 
 @main.route('/catalogo/colonias/edit/<int:id>', methods=['GET', 'POST'])
@@ -190,7 +216,8 @@ def edit_colonia(id):
         colonia.id_municipio = form.id_municipio.data
         colonia.nombre_colonia = form.nombre_colonia.data
         db.session.add(colonia)
-        return redirect('/catalogo/colonias')
+        flash('El registro fue actualizado exitosamente')
+        return redirect(url_for('main.get_registro', table='colonias', id=colonia.id_colonia))
     form.id_colonia.data = colonia.id_colonia
     form.id_municipio.data = colonia.id_municipio 
     form.nombre_colonia.data=colonia.nombre_colonia
@@ -202,6 +229,7 @@ def del_colonia(id):
     colonia = Colonia.query.get_or_404(id)
     db.session.delete(colonia)
     db.session.commit()
+    flash('El registro fue eliminado exitosamente')
     return redirect("/catalogo/colonias")
 
 @main.route('/catalogo/hospitales/edit/<int:id>', methods=['GET', 'POST'])
@@ -217,7 +245,8 @@ def edit_hospital(id):
         hospital.telefono=form.telefono.data
         hospital.email=form.email.data
         db.session.add(hospital)
-        return redirect('/catalogo/hospitales')
+        flash('El registro fue actualizado exitosamente')
+        return redirect(url_for('main.get_registro', table='hospitales', id=hospital.id_hospital))
     form.id_municipio.data=hospital.id_municipio
     form.nombre_hospital.data=hospital.nombre_hospital
     form.direccion.data=hospital.direccion
@@ -231,6 +260,7 @@ def del_hospital(id):
     hospital = Hospital.query.get_or_404(id)
     db.session.delete(hospital)
     db.session.commit()
+    flash('El registro fue eliminado exitosamente')
     return redirect("/catalogo/hospitales")
 
 @main.route('/catalogo/ambulancias/edit/<int:id>', methods=['GET', 'POST'])
@@ -243,7 +273,8 @@ def edit_ambulancia(id):
         ambulancia.num_unidad=form.num_unidad.data
         ambulancia.id_servicio=form.id_servicio.data
         db.session.add(ambulancia)
-        return redirect('/catalogo/ambulancias')
+        flash('El registro fue actualizado exitosamente')
+        return redirect(url_for('main.get_registro', table='ambulancias', id=ambulancia.id_ambulancia))
     form.num_unidad.data=ambulancia.num_unidad
     form.id_servicio.data=ambulancia.id_servicio
     return render_template('edit.html', form=form)
@@ -254,6 +285,7 @@ def del_ambulancia(id):
     ambulancia = Ambulancia.query.get_or_404(id)
     db.session.delete(ambulancia)
     db.session.commit()
+    flash('El registro fue eliminado exitosamente')
     return redirect("/catalogo/ambulancias")
 
 @main.route('/catalogo/servicios/edit/<int:id>', methods=['GET', 'POST'])
@@ -267,7 +299,8 @@ def edit_servicio(id):
         servicio.telefono=form.telefono.data
         servicio.email=form.email.data
         db.session.add(servicio)
-        return redirect('/catalogo/servicios')
+        flash('El registro fue actualizado exitosamente')
+        return redirect(url_for('main.get_registro', table='servicios', id=servicio.id_servicio))
     form.servicio_nombre.data=servicio.servicio_nombre
     form.contacto.data=servicio.contacto
     form.telefono.data=servicio.telefono
@@ -280,6 +313,7 @@ def del_servicio(id):
     servicio = Servicio.query.get_or_404(id)
     db.session.delete(servicio)
     db.session.commit()
+    flash('El registro fue eliminado exitosamente')
     return redirect("/catalogo/servicios")
 
 @main.route('/catalogo/tipo_urgencia/edit/<int:id>', methods=['GET', 'POST'])
@@ -291,7 +325,8 @@ def edit_urgencia(id):
         urgencia.urgencia=form.urgencia.data
         urgencia.descripcion=form.descripcion.data
         db.session.add(urgencia)
-        return redirect('/catalogo/tipo_urgencia')
+        flash('El registro fue actualizado exitosamente')
+        return redirect(url_for('main.get_registro', table='tipo_urgencia', id=urgencia.id_tipo_urgencia))
     form.urgencia.data=urgencia.urgencia
     form.descripcion.data=urgencia.descripcion
     return render_template('edit.html', form=form)
@@ -302,6 +337,7 @@ def del_urgencia(id):
     urgencia = Tipo_Urgencia.query.get_or_404(id)
     db.session.delete(urgencia)
     db.session.commit()
+    flash('El registro fue eliminado exitosamente')
     return redirect("/catalogo/tipo_urgencia")
 
 
@@ -319,7 +355,8 @@ def edit_paciente(id):
         paciente.fecha_nac=form.fecha_nac.data
         paciente.id_colonia=form.id_colonia.data
         db.session.add(paciente)
-        return redirect('/catalogo/pacientes')
+        flash('El registro fue actualizado exitosamente')
+        return redirect(url_for('main.get_registro', table='pacientes', id=paciente.id_paciente))
     form.servicio_medico.data=paciente.servicio_medico
     form.nombre_paciente.data=paciente.nombre_paciente
     form.apellidos.data=paciente.apellidos
@@ -334,6 +371,7 @@ def del_paciente(id):
     paciente = Paciente.query.get_or_404(id)
     db.session.delete(paciente)
     db.session.commit()
+    flash('El registro fue eliminado exitosamente')
     return redirect("/catalogo/pacientes")
 
 @main.route('/catalogo/movimientos/edit/<int:id>', methods=['GET', 'POST'])
@@ -361,7 +399,8 @@ def edit_movimiento(id):
         movimiento.escala_glassgow=form.escala_glassglow.data
         movimiento.gravedad=form.gravedad.data
         db.session.add(movimiento)
-        return redirect('/catalogo/movimientos')
+        flash('El registro fue actualizado exitosamente')
+        return redirect(url_for('main.get_registro', table='movimientos', id=movimiento.id_movimiento))
     form.id_paciente.data=movimiento.id_paciente
     current_user.id_usuario=movimiento.id_usuario
     form.id_hospital.data=movimiento.id_hospital
@@ -383,6 +422,7 @@ def del_movimiento(id):
     movimiento = Movimiento.query.get_or_404(id)
     db.session.delete(movimiento)
     db.session.commit()
+    flash('El registro fue eliminado exitosamente')
     return redirect("/catalogo/movimientos")
 
 
