@@ -4,7 +4,8 @@ from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from models import *
 from flask.ext.wtf import Form
-from wtforms import StringField, SubmitField from wtforms.validators import Required
+from wtforms import StringField, SubmitField 
+from wtforms.validators import Required
 from flask_marshmallow import Marshmallow
 
 app = Flask(__name__)

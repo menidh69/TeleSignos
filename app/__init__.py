@@ -6,6 +6,9 @@ from config import config
 from flask_login import LoginManager
 from flask_marshmallow import Marshmallow
 from flask_restful import Api
+from authlib.integrations.flask_client import OAuth
+
+
 
 bootstrap = Bootstrap()
 moment = Moment()
@@ -13,7 +16,7 @@ db = SQLAlchemy()
 ma = Marshmallow()
 api_bp = Blueprint('api_bp', __name__)
 api = Api(api_bp)
-
+oauth = OAuth()
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
@@ -23,11 +26,11 @@ def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
-        
     bootstrap.init_app(app)
     moment.init_app(app)
     db.init_app(app)
     ma.init_app(app)
+    oauth.init_app(app)
     login_manager.init_app(app)
 
     from .main import main as main_blueprint 

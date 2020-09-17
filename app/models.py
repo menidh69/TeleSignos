@@ -169,8 +169,8 @@ class Tipo_Usuario(db.Model):
     id_tipo_usuario = db.Column(db.Integer, primary_key=True, autoincrement=True)
     tipo_usuario = db.Column(db.Enum(tipoUsuario))
     medico_reg = db.Column(db.Boolean)
-    registro = db.Column(db.Boolean)
-    usuarios = db.relationship('Usuario', backref='role', lazy=True)
+    registro = db.Column(db.Boolean, default=False, index=True)
+    usuarios = db.relationship('Usuario', backref='role', lazy='dynamic')
     permissions = db.Column(db.Integer)
 
     def __init__(self, tipo_usuario):
@@ -202,7 +202,8 @@ class Usuario(UserMixin, db.Model):
     __table_args__ = {"schema": "public"}
 
     id_usuario = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    nombre_usuario = db.Column(db.String(70), unique=True, index=True)
+    email = db.Column(db.String(70), unique=True, index=True)
+    nombre_usuario = db.Column(db.String(70), index=True)
     id_tipo_usuario = db.Column(db.Integer, db.ForeignKey('public.tipo_usuario.id_tipo_usuario'), nullable=False)
     movimientos = db.relationship('Movimiento', backref='usuario', lazy=True)
     password_hash = db.Column(db.String(128))
@@ -225,10 +226,11 @@ class Usuario(UserMixin, db.Model):
     def __init__(self, **kwargs): 
         super(Usuario, self).__init__(**kwargs) 
         if self.role is None:
-            if self.nombre_usuario == 'manuel' or 'cirett': 
-                self.role = Tipo_Usuario.query.filter_by(permissions=0xff).first()
-            if self.role is None:
-                self.role = Tipo_Usuario.query.filter_by(registro=True).first()
+            self.role = Tipo_Usuario.query.get(self.id_tipo_usuario)
+            # if self.nombre_usuario == 'manuel' or 'cirett': 
+            #     self.role = Tipo_Usuario.query.filter_by(permissions=0xff).first()
+            # if self.role is None:
+            #     self.role = Tipo_Usuario.query.filter_by(registro=True).first()
 
     def can(self, permissions):
         return self.role is not None and \
@@ -299,7 +301,7 @@ class Movimiento(db.Model):
 
     id_movimiento = db.Column(db.Integer, primary_key=True, autoincrement=True)
     id_paciente = db.Column(db.Integer, db.ForeignKey('public.pacientes.id_paciente'))
-    id_usuario = db.Column(db.Integer, db.ForeignKey('public.usuarios.id_usuario'))
+    id_usuario = db.Column(db.Integer, db.ForeignKey('public.usuarios.id_usuario', ondelete='SET DEFAULT', server_default=''))
     id_hospital = db.Column(db.Integer, db.ForeignKey('public.hospitales.id_hospital'))
     id_ambulancia = db.Column(db.Integer, db.ForeignKey('public.ambulancias.id_ambulancia'))
     id_tipo_urgencia = db.Column(db.Integer, db.ForeignKey('public.tipo_urgencia.id_tipo_urgencia'))

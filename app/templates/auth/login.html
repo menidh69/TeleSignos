@@ -11,11 +11,20 @@
         </div>
     </div>
     <div class="col-sm-6 bg-dark border-top">
-        <div class="container text-center">
+        <div class="container my-4">
+            {% for message in get_flashed_messages() %} 
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+                </div>
+            </div>
+                {% endfor %}
+        <div class="container text-light text-center">
             <h1 class="display-4 text-center text-light my-4 py-4">TeleSignos</h1>
             {{wtf.quick_form(form)}}
+            <a href="google"><img class="my-4" src="/static/btn_google_signin_light_normal_web.png"></a>
         </div>
-        <a class="button" href="/login">Google Login</a>
+        
     </div>
 </div>
 

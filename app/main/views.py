@@ -101,8 +101,11 @@ def new_ambulancia():
 def new_usuario():
     form = UsuarioForm()
     form.id_tipo_usuario.choices = [(tipo.id_tipo_usuario, tipo.tipo_usuario) for tipo in Tipo_Usuario.query.all()]
+    print(form.id_tipo_usuario.choices)
     if form.validate_on_submit():
-        usuario = Usuario(id_tipo_usuario=form.id_tipo_usuario.data, nombre_usuario=form.nombre_usuario.data, password_hash=form.password_hash.data)
+        print(form.id_tipo_usuario.data)
+        usuario = Usuario(email=form.email.data, nombre_usuario=form.nombre_usuario.data, password=form.password.data, id_tipo_usuario=form.id_tipo_usuario.data)
+        print(usuario)
         db.session.add(usuario)
         flash('El registro fue guardado exitosamente')
         return redirect(url_for('main.show_table', table='usuarios'))
@@ -373,6 +376,15 @@ def del_paciente(id):
     db.session.commit()
     flash('El registro fue eliminado exitosamente')
     return redirect("/catalogo/pacientes")
+
+@main.route('/catalogo/usuarios/delete/<int:id>', methods=['GET'])
+@login_required
+def del_usuario(id):
+    usuario = Usuario.query.get_or_404(id)
+    db.session.delete(usuario)
+    db.session.commit()
+    flash('El registro fue eliminado exitosamente')
+    return redirect("/catalogo/usuarios")
 
 @main.route('/catalogo/movimientos/edit/<int:id>', methods=['GET', 'POST'])
 @login_required

@@ -22,12 +22,8 @@ class DevelopmentConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']  
-    # OAUTH_CREDENTIALS={
-    #     'google':{
-    #         'id': os.environ['GOOGLE_LOGIN_CLIENT_ID'],
-    #         'secret': os.environ['GOOGLE_LOGIN_CLIENT_SECRET']
-    #     }
-    # }  
+    GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
+    GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
     
 
 class TestingConfig(Config):

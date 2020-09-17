@@ -1,5 +1,6 @@
 alembic==1.4.2
 aniso8601==8.0.0
+Authlib==0.14.3
 Babel==2.8.0
 cachelib==0.1.1
 cachetools==4.1.1
@@ -8,7 +9,9 @@ cffi==1.14.2
 chardet==3.0.4
 click==7.1.2
 cryptography==3.1
+dnspython==2.0.0
 dominate==2.5.1
+email-validator==1.1.1
 Flask==1.1.2
 Flask-Babel==2.0.0
 Flask-Bootstrap4==4.0.2
